@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raycasting_bonus.c                                 :+:      :+:    :+:   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/01/20 22:04:06 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/09 18:59:48 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d_bonus.h"
+#include "../include/cub3d.h"
 
 void init_horizontal_intersection(t_game *game, double angle)
 {
 	game->horizontal.foundHorzWall = false;
+	game->horizontal.closeHorzDoor = false;
+	game->horizontal.openHorzDoor = false;
 	game->horizontal.horzWallHitX = 0;
 	game->horizontal.horzWallHitY = 0;
 	game->horizontal.y_intercept = floor(game->player.position_y / UNIT_SIZE) * UNIT_SIZE;
 	if (is_facing_down(angle))
 		game->horizontal.y_intercept += UNIT_SIZE;
+	else
+		game->horizontal.y_intercept -= 0.0001;
 	game->horizontal.x_intercept = ((game->horizontal.y_intercept - game->player.position_y) / tan(angle)) + game->player.position_x;
 	game->horizontal.y_step = UNIT_SIZE;
 	if (is_facing_up(angle))
@@ -38,14 +42,25 @@ void horizontal_intersection(t_game *game, double angle)
 	double nextHorzStepY = game->horizontal.y_intercept;
 	double checkStepX = 0;
 	double checkStepY = 0;
+	bool closer_door = false;
 	while (nextHorzStepX >= 0 && nextHorzStepX <= game->width * UNIT_SIZE 
 		&& nextHorzStepY >= 0 && nextHorzStepY <= game->height * UNIT_SIZE)
 	{
 		checkStepX = nextHorzStepX;
 		checkStepY = nextHorzStepY;
-		if (is_facing_up(angle))
-			checkStepY -= 1;
-		if (is_wall(game, checkStepX, checkStepY))
+		// if (is_facing_up(angle))
+		// 	checkStepY -= 1;
+		if (is_doors(game, checkStepX, checkStepY))
+			game->horizontal.closeHorzDoor = true;
+		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door)
+		{
+			game->horizontal.x_open = (int)(nextHorzStepX / UNIT_SIZE);
+			game->horizontal.y_open = (int)(nextHorzStepY / UNIT_SIZE);
+			game->horizontal.openHorzDoor = true;
+			closer_door = true;
+		}
+		if (is_wall(game, checkStepX, checkStepY) 
+			|| is_doors(game, checkStepX, checkStepY))
 		{
 			game->horizontal.horzWallHitX = nextHorzStepX;
 			game->horizontal.horzWallHitY = nextHorzStepY;
@@ -54,18 +69,21 @@ void horizontal_intersection(t_game *game, double angle)
 		}
 		nextHorzStepX += game->horizontal.x_step;
 		nextHorzStepY += game->horizontal.y_step;
-	
 	}
 }
 
 void init_vertical_intersection(t_game *game, double angle)
 {
 	game->vertical.foundVertWall = false;
+	game->vertical.closeVertDoor = false;
+	game->vertical.openVertDoor = false;
 	game->vertical.vertWallHitX = 0;
 	game->vertical.vertWallHitY = 0;
 	game->vertical.x_intercept = floor(game->player.position_x / UNIT_SIZE) * UNIT_SIZE;
 	if (is_facing_right(angle))
 		game->vertical.x_intercept += UNIT_SIZE;
+	else
+		game->vertical.x_intercept -= 0.0001;
 	game->vertical.y_intercept = game->player.position_y + (game->vertical.x_intercept - game->player.position_x) * tan(angle);
 	game->vertical.x_step = UNIT_SIZE;
 	if (is_facing_left(angle))
@@ -84,14 +102,25 @@ void vertical_intersection(t_game *game, double angle)
 	double nextVertStepY = game->vertical.y_intercept;
 	double checkStepX = 0;
 	double checkStepY = 0;
+	bool closer_door = false;
 	while (nextVertStepX >= 0 && nextVertStepX <= game->width * UNIT_SIZE
 			&& nextVertStepY >= 0 && nextVertStepY <= game->height * UNIT_SIZE)
 	{
 		checkStepX = nextVertStepX;
-		if (is_facing_left(angle))
-			checkStepX -= 1;
 		checkStepY = nextVertStepY;
-		if (is_wall(game, checkStepX, checkStepY))
+		// if (is_facing_left(angle))
+		// 	checkStepX -= 1;
+		if (is_doors(game, checkStepX, checkStepY))
+			game->vertical.closeVertDoor = true;
+		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door)
+		{
+			game->vertical.x_open = (int)(nextVertStepX / UNIT_SIZE);
+			game->vertical.y_open = (int)(nextVertStepY / UNIT_SIZE);
+			game->vertical.openVertDoor = true;
+			closer_door = true;
+		}
+		if ((is_wall(game, checkStepX, checkStepY)
+			|| is_doors(game, checkStepX, checkStepY)))
 		{
 			game->vertical.vertWallHitX = nextVertStepX;
 			game->vertical.vertWallHitY = nextVertStepY;
@@ -116,6 +145,8 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		horizontal_distance = calculate_distance(game->player.position_x, game->player.position_y, game->horizontal.horzWallHitX, game->horizontal.horzWallHitY);
 	if (game->vertical.foundVertWall)
 		vertical_distance = calculate_distance(game->player.position_x, game->player.position_y, game->vertical.vertWallHitX, game->vertical.vertWallHitY);
+	ray->h_distance = horizontal_distance;
+	ray->v_distance = vertical_distance;
 	if (horizontal_distance < vertical_distance)
 	{
 		ray->wallHitX = game->horizontal.horzWallHitX;
@@ -123,14 +154,20 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		ray->distance = horizontal_distance;
 		ray->foundHorz = true;
 		ray->foundVert = false;
+		ray->foundDoor = game->horizontal.closeHorzDoor;
+		ray->h_openX = game->horizontal.x_open;
+		ray->h_openY = game->horizontal.y_open;
 	}
 	else
 	{
 		ray->wallHitX = game->vertical.vertWallHitX;
-		ray->wallHitY = game->vertical.vertWallHitY;
+		ray->wallHitY = game->vertical.vertWallHitY;  
 		ray->distance = vertical_distance;
 		ray->foundVert = true;
 		ray->foundHorz = false;
+		ray->foundDoor = game->vertical.closeVertDoor;
+		ray->v_openX = game->vertical.x_open;
+		ray->v_openY = game->vertical.y_open;
 	}
 	ray->distance *= cos(game->player.angle_rotation - angle);
 }
@@ -142,6 +179,7 @@ void cast_rays(t_game *game)
 	
 	i = 0;
 	game->rays->ray_angle = game->player.angle_rotation - (FOV / 2);
+	game->is_door = false;
 	while (i < game->rays_number)
 	{
 		angle = normalize_angle(game->rays->ray_angle);

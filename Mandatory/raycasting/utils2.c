@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 13:50:09 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/07 23:15:38 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/08 00:34:31 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int depth_color(double distance, int terp)
 
 void mouse_hook(double xpos, double ypos, void *param)
 {
-    static int prev_posx = -1;
+    static int prev_posx = WIDTH;
     t_game *game;
 
     game = (t_game *)param;
@@ -61,7 +61,7 @@ void mouse_hook(double xpos, double ypos, void *param)
         double sensitivity = 0.01;
         double delta = (xpos - prev_posx) * sensitivity;
         game->player.angle_rotation += delta;
-        game->player.angle_rotation = normalize_angle(game->player.angle_rotation);
+        // game->player.angle_rotation = normalize_angle(game->player.angle_rotation);
         prev_posx = xpos;
     }
     mlx_set_mouse_pos(game->mlx, WIDTH / 2, HEIGHT / 2);

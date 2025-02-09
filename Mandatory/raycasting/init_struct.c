@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_struct_bonus.c                                :+:      :+:    :+:   */
+/*   init_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 12:16:55 by asalmi            #+#    #+#             */
-/*   Updated: 2025/01/20 22:03:53 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/09 15:56:50 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d_bonus.h"
+#include "../include/cub3d.h"
 
 void find_player(t_game *game)
 {
@@ -41,6 +41,8 @@ void init_struct(t_game *game)
 
 	game->width = 0;
 	game->height = 0;
+	game->minimap_width = 0;
+	game->minimap_height = 0;
 	game->elements = NULL;
 	game->map = NULL;
 	game->no_path = NULL;
@@ -50,9 +52,6 @@ void init_struct(t_game *game)
 	game->floor_color = NULL;
 	game->ceiling_color = NULL;
 	game->trash = NULL;
-	game->map = malloc(sizeof(char *) * (20));
-	if (!game->map)
-		return ;
 	game->player.rotate_direction = 0;
 	game->player.move_direction = 0;
 	game->player.rotate_speed = 5 * (M_PI / 180);
@@ -65,11 +64,17 @@ void init_struct(t_game *game)
 		free(game);
 		return ;
 	}
+	game->rays->foundDoor = false;
+	game->rays->foundHorz = false;
+	game->rays->foundVert = false;
 	game->player.position_x = 0;
 	game->player.position_y = 0;
+	game->horizontal.x_open = 0;
+	game->horizontal.y_open = 0;
+	game->vertical.x_open = 0;
+	game->vertical.y_open = 0;
 	mlx = mlx_init(WIDTH, HEIGHT, "cub3d", false);
 	game->mlx = mlx;
 	if (!mlx)
 		return ;
-	// find_player(game);
 }

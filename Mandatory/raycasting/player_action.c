@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/07 22:40:15 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/09 19:13:43 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void open_door(t_game *game)
 	if (midd_ray->foundDoor && distance <= 65)
 	{
 		i = 0;
-		// printf("----> x: %d ----> y: %d\n", grid_x, grid_y);
+		printf("----> x: %d ----> y: %d\n", grid_x, grid_y);
 		while (i < doors_counter(game))
 		{
 			if (grid_x == game->doors[i].x && grid_y == game->doors[i].y && game->doors[i].is_closed)
@@ -66,25 +66,35 @@ void close_door(t_game *game)
 	double distance;
 	t_ray *midd_ray;
 	
+	i = 0;
 	midd_index = game->rays_number / 2;
 	midd_ray = &game->rays[midd_index];
-	distance = calculate_distance(game->player.position_x, game->player.position_y, midd_ray->wallHitX, midd_ray->wallHitY);
-	grid_x = (int)(midd_ray->wallHitX / UNIT_SIZE);
-	grid_y = (int)(midd_ray->wallHitY / UNIT_SIZE);
-	if (midd_ray->foundDoor && distance <= 65)
+	if (midd_ray->h_distance < midd_ray->v_distance)
 	{
-		i = 0;
-		// printf("----> x: %d ----> y: %d\n", grid_x, grid_y);
+		grid_x = midd_ray->h_openX;
+		grid_y = midd_ray->h_openY;
+	}
+	else
+	{
+		grid_x = midd_ray->v_openX;
+		grid_y = midd_ray->v_openY;
+	}
+	printf("dis: %f\n", distance);
+	printf("open position: %d, %d\n", grid_x, grid_y);
+	if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT)
+		return ;
+	if (game->map[grid_y][grid_x] == 'O')
+	{
 		while (i < doors_counter(game))
 		{
-			if (grid_x == game->doors[i].x && grid_y == game->doors[i].y && !game->doors[i].is_closed)
+			if (game->doors[i].x == grid_x && game->doors[i].y == grid_y)
 			{
 				game->map[grid_y][grid_x] = 'C';
 				game->doors[i].is_closed = true;
 				break;
 			}
 			i++;
-		}
+		}	
 	}
 }
 

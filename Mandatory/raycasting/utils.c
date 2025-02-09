@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 20:45:21 by asalmi            #+#    #+#             */
-/*   Updated: 2025/01/20 22:04:10 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/08 17:46:27 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d_bonus.h"
+#include "../include/cub3d.h"
 
 size_t count_height(char **map)
 {
@@ -54,11 +54,27 @@ bool is_wall(t_game *game, double x, double y)
 {
 	int x_tmp = floor(x / UNIT_SIZE);
 	int y_tmp = floor(y / UNIT_SIZE);
-	// printf("x_tmp: %d --- Width%d\n", x_tmp, game->width);
-	// printf("y_tmp: %d--- height%d\n", y_tmp, game->height);
 	if (x_tmp < 0 || y_tmp < 0 || x_tmp >= ft_strlen(game->map[y_tmp]) || y_tmp >= game->height)
 		return (false);
 	return (game->map[y_tmp][x_tmp] == '1');
+}
+
+bool is_doors(t_game *game, double x, double y)
+{
+	int x_tmp = floor(x / UNIT_SIZE);
+	int y_tmp = floor(y / UNIT_SIZE);
+	if (x_tmp < 0 || y_tmp < 0 || x_tmp >= ft_strlen(game->map[y_tmp]) || y_tmp >= game->height)
+		return (false);
+	return (game->map[y_tmp][x_tmp] == 'C');
+}
+
+bool is_openDoor(t_game *game, double x, double y)
+{
+	int x_tmp = floor(x / UNIT_SIZE);
+	int y_tmp = floor(y / UNIT_SIZE);
+	if (x_tmp < 0 || y_tmp < 0 || x_tmp >= ft_strlen(game->map[y_tmp]) || y_tmp >= game->height)
+		return (false);
+	return (game->map[y_tmp][x_tmp] == 'O');
 }
 
 double calculate_distance(double x1, double y1, double x2, double y2)
@@ -69,4 +85,58 @@ double calculate_distance(double x1, double y1, double x2, double y2)
 	dx = x2 - x1;
 	dy = y2 - y1;
 	return (sqrt((dx * dx) + (dy * dy)));
+}
+
+int init_door(t_game *game)
+{
+	int door_size;
+
+	door_size = doors_counter(game);
+	if (door_size <= 0)
+	{
+		game->doors = NULL;
+		return (1);
+	}
+	game->doors = malloc(sizeof(t_doors) * (door_size));
+	if (!game->doors)
+	{
+		free(game->rays);
+		free(game);
+		exit(EXIT_FAILURE);
+	}
+	return (0);
+}
+
+void doors_allocted(t_game *game)
+{
+	int x;
+	int y;
+	int index;
+	
+	x = 0;
+	y = 0;
+	index = 0;
+	if (init_door(game) == -1)
+		return ;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			// printf("%c", game->map[y][x]);
+			if (game->map[y][x] == 'C' || game->map[y][x] == 'O')
+			{
+				game->doors[index].x = x;
+				game->doors[index].y = y;
+				if (game->map[y][x] == 'C')
+					game->doors[index].is_closed = true;
+				if (game->map[y][x] == 'O')
+					game->doors[index].is_closed = false;
+				printf("door[%d]: grid position: x -> %d y -> %d\n", index, x, y);
+				index++;
+			}
+			x++;
+		}
+		y++;
+	}
 }

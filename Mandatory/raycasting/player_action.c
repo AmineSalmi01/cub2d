@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/09 19:13:43 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/11 01:04:32 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,13 @@ void close_door(t_game *game)
 	i = 0;
 	midd_index = game->rays_number / 2;
 	midd_ray = &game->rays[midd_index];
-	if (midd_ray->h_distance < midd_ray->v_distance)
-	{
-		grid_x = midd_ray->h_openX;
-		grid_y = midd_ray->h_openY;
-	}
-	else
+	grid_x = midd_ray->h_openX;
+	grid_y = midd_ray->h_openY;
+	if (grid_x == 0 && grid_y == 0)
 	{
 		grid_x = midd_ray->v_openX;
 		grid_y = midd_ray->v_openY;
 	}
-	printf("dis: %f\n", distance);
-	printf("open position: %d, %d\n", grid_x, grid_y);
 	if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT)
 		return ;
 	if (game->map[grid_y][grid_x] == 'O')

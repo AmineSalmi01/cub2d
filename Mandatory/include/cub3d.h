@@ -89,11 +89,16 @@ typedef struct s_ray {
 	int h_openY;
 	int v_openX;
 	int v_openY;
+	bool foundNO;
+	bool foundSO;
+	bool foundEA;
+	bool foundWE;
 	double h_distance;
 	double v_distance;
 	t_horizontal horz;
 	t_vertical vert;
 } t_ray;
+
 
 typedef struct s_game {
 	int width;

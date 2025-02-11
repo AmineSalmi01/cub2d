@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/09 18:59:48 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/11 01:30:35 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,19 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 	ray->distance *= cos(game->player.angle_rotation - angle);
 }
 
+// void rays_direction(t_ray *ray)
+// {
+// 	double angle = ray->ray_angle;
+// 	if (is_facing_up(angle))
+// 		ray->foundNO = true;
+// 	if (is_facing_down(angle))
+// 		ray->foundSO = true;
+// 	if (is_facing_right(angle))
+// 		ray->foundEA = true;
+// 	if (is_facing_left(angle))
+// 		ray->foundWE = true;
+// }
+
 void cast_rays(t_game *game)
 {
 	int i;
@@ -180,19 +193,28 @@ void cast_rays(t_game *game)
 	i = 0;
 	game->rays->ray_angle = game->player.angle_rotation - (FOV / 2);
 	game->is_door = false;
-	while (i < game->rays_number)
+	game->rays->foundNO = false;
+	game->rays->foundSO = false;
+	game->rays->foundEA = false;
+	game->rays->foundWE = false;
+	while (i < 10)
 	{
 		angle = normalize_angle(game->rays->ray_angle);
 		find_distance(game, &game->rays[i], angle);
-		game->rays->ray_angle += (FOV / game->rays_number);
+		rays_direction(&game->rays[i]);
+		game->rays->ray_angle += (FOV / 10);
+		// printf("up: %d\n", game->rays[i].foundNO);
+		// printf("down: %d\n", game->rays[i].foundSO);
+		// printf("right: %d\n", game->rays[i].foundEA);
+		// printf("left: %d\n", game->rays[i].foundWE);
 		i++;
 	}
 	i = 0;
-	render_wall(game, game->rays);
-	// while (i < game->rays_number)
-	// {
-	// 	// draw_line(game, game->rays[i]);
-	// 	dda_test(game, game->rays[i]);
-	// 	i++;
-	// }
+	// render_wall(game, game->rays);
+	while (i < 10)
+	{
+		// draw_line(game, game->rays[i]);
+		dda_test(game, game->rays[i]);
+		i++;
+	}
 }

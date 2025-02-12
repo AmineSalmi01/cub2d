@@ -84,6 +84,8 @@ typedef struct s_ray {
 	double distance;
 	bool foundHorz;
 	bool foundVert;
+	bool foundHorzDoor;
+	bool foundVertDoor;
 	bool foundDoor;
 	int h_openX;
 	int h_openY;

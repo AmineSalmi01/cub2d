@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 12:16:55 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/11 01:26:23 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/11 23:51:15 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ void init_struct(t_game *game)
 		free(game);
 		return ;
 	}
-	game->rays->foundDoor = false;
+	game->rays->foundHorzDoor = false;
+	game->rays->foundVertDoor = false;
 	game->rays->foundHorz = false;
 	game->rays->foundVert = false;
 	game->player.position_x = 0;

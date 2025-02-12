@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/11 01:04:32 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/11 23:53:15 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void open_door(t_game *game)
 	distance = calculate_distance(game->player.position_x, game->player.position_y, midd_ray->wallHitX, midd_ray->wallHitY);
 	grid_x = (int)(midd_ray->wallHitX / UNIT_SIZE);
 	grid_y = (int)(midd_ray->wallHitY / UNIT_SIZE);
-	if (midd_ray->foundDoor && distance <= 65)
+	if ((midd_ray->foundVertDoor || midd_ray->foundHorzDoor) && distance <= 65)
 	{
 		i = 0;
 		printf("----> x: %d ----> y: %d\n", grid_x, grid_y);

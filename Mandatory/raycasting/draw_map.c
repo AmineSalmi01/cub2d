@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 21:41:32 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/07 17:31:47 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/12 00:19:14 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void render_wall(t_game *game, t_ray *ray)
 		terp = depth_color(ray[i].distance, terp);
 		while (y < wallbuttomPixel)
 		{
-			if (ray[i].foundDoor)
+			if (ray[i].foundHorzDoor || ray[i].foundVertDoor)
 				mlx_put_pixel(game->image, i, y, rgbt_color(107, 229, 184, terp));				
 			else if (ray[i].foundHorz)
 				mlx_put_pixel(game->image, i, y, rgbt_color(204, 26, 198, terp));

@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/11 23:53:15 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/13 01:36:33 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,37 +59,46 @@ void open_door(t_game *game)
 
 void close_door(t_game *game)
 {
-	int i;
-	int midd_index;
-	int grid_x;
-	int grid_y;
-	double distance;
-	t_ray *midd_ray;
-	
-	i = 0;
-	midd_index = game->rays_number / 2;
-	midd_ray = &game->rays[midd_index];
-	grid_x = midd_ray->h_openX;
-	grid_y = midd_ray->h_openY;
-	if (grid_x == 0 && grid_y == 0)
+    int i = 0;
+    int midd_index;
+    t_ray *midd_ray;
+	double dis_h;
+	double dis_v;
+    midd_index = game->rays_number / 2;
+    midd_ray = &game->rays[midd_index];
+    find_distance(game, midd_ray, game->player.angle_rotation);
+	if (midd_ray->openHorzDoor)
+		dis_h = calculate_distance(game->player.position_x, game->player.position_y, (midd_ray->h_openX * UNIT_SIZE), (midd_ray->h_openY * UNIT_SIZE));
+	if (midd_ray->openVertDoor)
+		dis_v = calculate_distance(game->player.position_x, game->player.position_y, (midd_ray->v_openX * UNIT_SIZE), (midd_ray->v_openY * UNIT_SIZE));
+	// printf("player x: %f\n", game->player.position_x);
+	// printf("player y: %f\n", game->player.position_y);
+	printf("dis horz: %f\ndis vert: %f\n", dis_h, dis_v);
+	if (midd_ray->openVertDoor && dis_v <= 65)
 	{
-		grid_x = midd_ray->v_openX;
-		grid_y = midd_ray->v_openY;
+        while (i < doors_counter(game))
+        {
+            if (game->doors[i].x == midd_ray->v_openX && game->doors[i].y == midd_ray->v_openY)
+            {
+                game->map[midd_ray->v_openY][midd_ray->v_openX] = 'C';
+                game->doors[i].is_closed = true;
+            }
+            i++;
+        }
 	}
-	if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT)
-		return ;
-	if (game->map[grid_y][grid_x] == 'O')
+    i = 0;
+	if (midd_ray->openHorzDoor && dis_v <= 65)
 	{
-		while (i < doors_counter(game))
-		{
-			if (game->doors[i].x == grid_x && game->doors[i].y == grid_y)
-			{
-				game->map[grid_y][grid_x] = 'C';
-				game->doors[i].is_closed = true;
-				break;
-			}
-			i++;
-		}	
+        while (i < doors_counter(game))
+        {
+            if (game->doors[i].x == midd_ray->h_openX && game->doors[i].y == midd_ray->h_openY)
+            {
+                game->map[midd_ray->h_openY][midd_ray->h_openX] = 'C';
+                game->doors[i].is_closed = true;
+                break;
+            }
+            i++;
+    	}	
 	}
 }
 

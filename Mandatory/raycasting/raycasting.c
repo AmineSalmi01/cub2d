@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/12 00:34:34 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/13 01:11:32 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void init_horizontal_intersection(t_game *game, double angle)
 {
 	game->horizontal.foundHorzWall = false;
 	game->horizontal.closeHorzDoor = false;
-	// game->horizontal.openHorzDoor = false;
+	game->horizontal.openHorzDoor = false;
 	game->horizontal.horzWallHitX = 0;
 	game->horizontal.horzWallHitY = 0;
 	game->horizontal.y_intercept = floor(game->player.position_y / UNIT_SIZE) * UNIT_SIZE;
@@ -52,11 +52,12 @@ void horizontal_intersection(t_game *game, double angle)
 		// 	checkStepY -= 1;
 		if (is_doors(game, checkStepX, checkStepY))
 			game->horizontal.closeHorzDoor = true;
-		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door)
+		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door && angle == game->player.angle_rotation)
 		{
+			// printf("test -----------\n");
 			game->horizontal.x_open = (int)(nextHorzStepX / UNIT_SIZE);
 			game->horizontal.y_open = (int)(nextHorzStepY / UNIT_SIZE);
-			// game->horizontal.openHorzDoor = true;
+			game->horizontal.openHorzDoor = true;
 			closer_door = true;
 		}
 		if (is_wall(game, checkStepX, checkStepY) 
@@ -76,7 +77,7 @@ void init_vertical_intersection(t_game *game, double angle)
 {
 	game->vertical.foundVertWall = false;
 	game->vertical.closeVertDoor = false;
-	// game->vertical.openVertDoor = false;
+	game->vertical.openVertDoor = false;
 	game->vertical.vertWallHitX = 0;
 	game->vertical.vertWallHitY = 0;
 	game->vertical.x_intercept = floor(game->player.position_x / UNIT_SIZE) * UNIT_SIZE;
@@ -112,11 +113,11 @@ void vertical_intersection(t_game *game, double angle)
 		// 	checkStepX -= 1;
 		if (is_doors(game, checkStepX, checkStepY))
 			game->vertical.closeVertDoor = true;
-		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door)
+		if (is_openDoor(game, checkStepX, checkStepY) && !closer_door && angle == game->player.angle_rotation)
 		{
 			game->vertical.x_open = (int)(nextVertStepX / UNIT_SIZE);
 			game->vertical.y_open = (int)(nextVertStepY / UNIT_SIZE);
-			// game->vertical.openVertDoor = true;
+			game->vertical.openVertDoor = true;
 			closer_door = true;
 		}
 		if ((is_wall(game, checkStepX, checkStepY)
@@ -145,8 +146,8 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		horizontal_distance = calculate_distance(game->player.position_x, game->player.position_y, game->horizontal.horzWallHitX, game->horizontal.horzWallHitY);
 	if (game->vertical.foundVertWall)
 		vertical_distance = calculate_distance(game->player.position_x, game->player.position_y, game->vertical.vertWallHitX, game->vertical.vertWallHitY);
-	ray->h_distance = horizontal_distance;
-	ray->v_distance = vertical_distance;
+	// ray->h_distance = horizontal_distance;
+	// ray->v_distance = vertical_distance;
 	if (horizontal_distance < vertical_distance)
 	{
 		ray->wallHitX = game->horizontal.horzWallHitX;
@@ -155,6 +156,7 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		ray->foundHorz = true;
 		ray->foundVert = false;
 		ray->foundHorzDoor = game->horizontal.closeHorzDoor;
+		ray->openHorzDoor = game->horizontal.openHorzDoor;
 		ray->h_openX = game->horizontal.x_open;
 		ray->h_openY = game->horizontal.y_open;
 	}
@@ -166,6 +168,7 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		ray->foundVert = true;
 		ray->foundHorz = false;
 		ray->foundVertDoor = game->vertical.closeVertDoor;
+		ray->openVertDoor = game->vertical.openVertDoor;
 		ray->v_openX = game->vertical.x_open;
 		ray->v_openY = game->vertical.y_open;
 	}
@@ -197,6 +200,8 @@ void cast_rays(t_game *game)
 	{
 		game->rays[i].foundHorzDoor = false;
 		game->rays[i].foundVertDoor = false;
+		game->rays[i].openHorzDoor = false;
+		game->rays[i].openVertDoor = false;
 		game->rays[i].foundNO = false;
 		game->rays[i].foundSO = false;
 		game->rays[i].foundEA = false;

@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/13 01:36:33 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/14 01:45:55 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void open_door(t_game *game)
 	midd_index = game->rays_number / 2;
 	midd_ray = &game->rays[midd_index];
 	distance = calculate_distance(game->player.position_x, game->player.position_y, midd_ray->wallHitX, midd_ray->wallHitY);
+	printf("open: %f\n", distance);
 	grid_x = (int)(midd_ray->wallHitX / UNIT_SIZE);
 	grid_y = (int)(midd_ray->wallHitY / UNIT_SIZE);
 	if ((midd_ray->foundVertDoor || midd_ray->foundHorzDoor) && distance <= 65)
@@ -57,6 +58,18 @@ void open_door(t_game *game)
 	}
 }
 
+int check_for_open(t_game *game, double door_x, double door_y)
+{
+    double player_x = game->player.position_x;
+    double player_y = game->player.position_y;
+
+    double distance = calculate_distance(player_x, player_y, (door_x * UNIT_SIZE), (door_y * UNIT_SIZE));
+	printf("close: %f\n", distance);
+    if (distance <= 70)
+		return (1);
+    return (0);
+}
+
 void close_door(t_game *game)
 {
     int i = 0;
@@ -67,14 +80,9 @@ void close_door(t_game *game)
     midd_index = game->rays_number / 2;
     midd_ray = &game->rays[midd_index];
     find_distance(game, midd_ray, game->player.angle_rotation);
-	if (midd_ray->openHorzDoor)
-		dis_h = calculate_distance(game->player.position_x, game->player.position_y, (midd_ray->h_openX * UNIT_SIZE), (midd_ray->h_openY * UNIT_SIZE));
+	// dis_h = calculate_distance(game->player.position_x, game->player.position_y, midd_ray->h_openX * UNIT_SIZE, midd_ray->h_openY * UNIT_SIZE);
+	// check_for_open(game, midd_ray->v_openX, midd_ray->v_openY);
 	if (midd_ray->openVertDoor)
-		dis_v = calculate_distance(game->player.position_x, game->player.position_y, (midd_ray->v_openX * UNIT_SIZE), (midd_ray->v_openY * UNIT_SIZE));
-	// printf("player x: %f\n", game->player.position_x);
-	// printf("player y: %f\n", game->player.position_y);
-	printf("dis horz: %f\ndis vert: %f\n", dis_h, dis_v);
-	if (midd_ray->openVertDoor && dis_v <= 65)
 	{
         while (i < doors_counter(game))
         {
@@ -87,7 +95,7 @@ void close_door(t_game *game)
         }
 	}
     i = 0;
-	if (midd_ray->openHorzDoor && dis_v <= 65)
+	if (midd_ray->openHorzDoor)
 	{
         while (i < doors_counter(game))
         {

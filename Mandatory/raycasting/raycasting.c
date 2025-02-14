@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/13 01:11:32 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/14 00:29:53 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,6 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 		horizontal_distance = calculate_distance(game->player.position_x, game->player.position_y, game->horizontal.horzWallHitX, game->horizontal.horzWallHitY);
 	if (game->vertical.foundVertWall)
 		vertical_distance = calculate_distance(game->player.position_x, game->player.position_y, game->vertical.vertWallHitX, game->vertical.vertWallHitY);
-	// ray->h_distance = horizontal_distance;
-	// ray->v_distance = vertical_distance;
 	if (horizontal_distance < vertical_distance)
 	{
 		ray->wallHitX = game->horizontal.horzWallHitX;

@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 21:41:32 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/12 00:19:14 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/14 20:00:10 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void draw_background(t_game *game)
 		}
 		y++;
 	}
-	// draw_grid(game);
+	draw_grid(game);
 }
 
 void draw_doors(t_game *game)

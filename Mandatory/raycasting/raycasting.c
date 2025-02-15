@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/14 00:29:53 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/15 00:16:55 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ void cast_rays(t_game *game)
 	i = 0;
 	angle = game->player.angle_rotation - (FOV / 2);
 	game->is_door = false;
-	while (i < game->rays_number)
+	while (i < 1)
 	{
 		game->rays[i].foundHorzDoor = false;
 		game->rays[i].foundVertDoor = false;
@@ -207,15 +207,15 @@ void cast_rays(t_game *game)
 		game->rays[i].ray_angle = normalize_angle(angle);
 		find_distance(game, &game->rays[i], game->rays[i].ray_angle);
 		rays_direction(&game->rays[i]);
-		angle += (FOV / game->rays_number);
+		angle += (FOV / 1);
 		i++;
 	}
-	render_wall(game, game->rays);
+	// render_wall(game, game->rays);
 	i = 0;
-	// while (i < game->rays_number)
-	// {
-	// 	// draw_line(game, game->rays[i]);
-	// 	dda_test(game, game->rays[i]);
-	// 	i++;
-	// }
+	while (i < 1)
+	{
+		// draw_line(game, game->rays[i]);
+		dda_test(game, game->rays[i]);
+		i++;
+	}
 }

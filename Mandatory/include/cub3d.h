@@ -187,6 +187,7 @@ bool 	is_doors(t_game *game, double x, double y);
 bool 	is_openDoor(t_game *game, double x, double y);
 
 void	movement_hook(mlx_key_data_t key, void *param);
+// void 	movement_hook(void *param);
 void 	mouse_hook(double xpos, double ypos, void *param);
 
 double	normalize_angle(double angle);

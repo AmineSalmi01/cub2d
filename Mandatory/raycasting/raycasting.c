@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 19:49:18 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/15 00:16:55 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/15 23:49:49 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,13 +176,13 @@ void find_distance(t_game *game, t_ray *ray, double angle)
 void rays_direction(t_ray *ray)
 {
 	double angle = ray->ray_angle;
-	if (is_facing_up(angle))
+	if (is_facing_up(angle) && ray->foundHorz)
 		ray->foundNO = true;
-	if (is_facing_down(angle))
+	if (is_facing_down(angle) && ray->foundHorz)
 		ray->foundSO = true;
-	if (is_facing_right(angle))
+	if (is_facing_right(angle) && ray->foundVert)
 		ray->foundEA = true;
-	if (is_facing_left(angle))
+	if (is_facing_left(angle) && ray->foundVert)
 		ray->foundWE = true;
 }
 
@@ -194,7 +194,7 @@ void cast_rays(t_game *game)
 	i = 0;
 	angle = game->player.angle_rotation - (FOV / 2);
 	game->is_door = false;
-	while (i < 1)
+	while (i < game->rays_number)
 	{
 		game->rays[i].foundHorzDoor = false;
 		game->rays[i].foundVertDoor = false;
@@ -207,15 +207,15 @@ void cast_rays(t_game *game)
 		game->rays[i].ray_angle = normalize_angle(angle);
 		find_distance(game, &game->rays[i], game->rays[i].ray_angle);
 		rays_direction(&game->rays[i]);
-		angle += (FOV / 1);
+		angle += (FOV / game->rays_number);
 		i++;
 	}
-	// render_wall(game, game->rays);
-	i = 0;
-	while (i < 1)
-	{
-		// draw_line(game, game->rays[i]);
-		dda_test(game, game->rays[i]);
-		i++;
-	}
+	render_wall(game, game->rays);
+	// i = 0;
+	// while (i < game->rays_number)
+	// {
+	// 	// draw_line(game, game->rays[i]);
+	// 	dda_test(game, game->rays[i]);
+	// 	i++;
+	// }
 }

@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 12:16:55 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/16 23:16:04 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/16 23:59:40 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void init_struct(t_game *game)
 	game->trash = NULL;
 	game->player.rotate_direction = 0;
 	game->player.move_direction = 0;
-	game->player.rotate_speed = 5 * (M_PI / 180);
+	game->player.rotate_speed = 3 * (M_PI / 180);
 	game->player.move_speed = MOVE_SPEED;
 	game->player.angle_rotation = M_PI_2;
 	game->rays_number = WIDTH;

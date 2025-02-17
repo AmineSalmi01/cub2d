@@ -11,7 +11,7 @@
 
 #define UNIT_SIZE 30
 #define FOV 60 * (M_PI / 180)
-#define MOVE_SPEED 5
+#define MOVE_SPEED 3
 #define WIDTH 1000
 #define HEIGHT 650
 #define MINIMAP_SCALE 0.2
@@ -186,8 +186,8 @@ bool 	is_wall(t_game *game, double x, double y);
 bool 	is_doors(t_game *game, double x, double y);
 bool 	is_openDoor(t_game *game, double x, double y);
 
-void	movement_hook(mlx_key_data_t key, void *param);
-// void 	movement_hook(void *param);
+void	movement_hook1(mlx_key_data_t key, void *param);
+void 	movement_hook(void *param);
 void 	mouse_hook(double xpos, double ypos, void *param);
 
 double	normalize_angle(double angle);

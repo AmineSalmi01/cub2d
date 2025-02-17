@@ -6,7 +6,7 @@
 /*   By: asalmi <asalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 18:11:16 by asalmi            #+#    #+#             */
-/*   Updated: 2025/02/16 23:10:17 by asalmi           ###   ########.fr       */
+/*   Updated: 2025/02/17 01:00:22 by asalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void close_door(t_game *game)
 	}
 }
 
-void movement_hook(mlx_key_data_t key, void *param)
+void movement_hook1(mlx_key_data_t key, void *param)
 {
 	t_game *game;
 	
@@ -135,30 +135,30 @@ void movement_hook(mlx_key_data_t key, void *param)
 	rebuild_game(game);
 }
 
-// void movement_hook(void *param)
-// {
-// 	t_game *game;
+void movement_hook(void *param)
+{
+	t_game *game;
 
-// 	game = param;
-// 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
-// 		mlx_close_window(game->mlx);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-// 		rotate_right(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-// 		rotate_left(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-// 		right_move(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-// 		left_move(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-// 		backward_move(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-// 		forward_move(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_F))
-// 		open_door(game);
-// 	else if (mlx_is_key_down(game->mlx, MLX_KEY_C))
-// 		close_door(game);
-// 	game->player.rotate_direction = 0;
-// 	game->player.move_direction = 0;
-// 	rebuild_game(game);
-// }
+	game = (t_game *)param;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(game->mlx);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		rotate_right(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		rotate_left(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+		right_move(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+		left_move(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		backward_move(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+		forward_move(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_F))
+		open_door(game);
+	else if (mlx_is_key_down(game->mlx, MLX_KEY_C))
+		close_door(game);
+	game->player.rotate_direction = 0;
+	game->player.move_direction = 0;
+	rebuild_game(game);
+}
